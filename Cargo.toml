@@ -1,0 +1,12 @@
+[package]
+name = "moji"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+emoji = "0.2.1"
+clap = {version = "3.1.0", features = ["default", "derive", "unicode"]}
+dialoguer = "0.10"
+copypasta-ext = "0.3.7"
