@@ -14,7 +14,11 @@ struct Cli {
 
     /// Add the chosen emoji to clipboard
     #[clap(short, long)]
-    clipboard: bool
+    clipboard: bool,
+
+    /// Return results in raw text format
+    #[clap(short, long)]
+    raw: bool
 }
 
 fn search_query(query: String) -> Vec<&'static emoji::Emoji> {
@@ -31,13 +35,16 @@ fn get_query(cli: &Cli) -> std::io::Result<String> {
         .interact_text()
 }
 
-fn explore_and_pick_one(results: Vec<&'static emoji::Emoji>) -> Option<&'static emoji::Emoji> {
-    let clean_result_vec: Vec<String> = results.iter()
+fn clean_results(results: &Vec<&'static emoji::Emoji>) -> Vec<String> {
+    results.iter()
         .map(|item| format!("{}     {}", item.glyph, item.name))
-        .collect();
+        .collect()
+}
 
+fn explore_and_pick_one(results: Vec<&'static emoji::Emoji>) -> Option<&'static emoji::Emoji> {
+    let cleaned = clean_results(&results);
     let selection_idx = dialoguer::Select::with_theme(&dialoguer::theme::ColorfulTheme::default())
-        .items(&clean_result_vec)
+        .items(&cleaned)
         .default(0)
         .interact_opt()
         .unwrap();
@@ -54,18 +61,24 @@ fn main() {
    
     if let Ok(query) = get_query(&cli) {
         let results = search_query(query);
+        if results.is_empty() { return }
 
-        if !results.is_empty() {
-            if let Some(chosen_emoji) = explore_and_pick_one(results) {
-                println!("You chose {}!", chosen_emoji.glyph);
-
-                if cli.clipboard {
-                    let mut clipboard_provider = DisplayServer::select().try_context().unwrap();
-                    clipboard_provider.set_contents(chosen_emoji.glyph.to_owned()).unwrap();
-
-                    println!("Added to clipboard!");
-                }
-            };
+        if cli.raw {
+            for item in clean_results(&results) {
+                println!("{}", item);
+            }
+            return
         }
+
+        if let Some(chosen_emoji) = explore_and_pick_one(results) {
+            println!("You chose {}!", chosen_emoji.glyph);
+
+            if cli.clipboard {
+                let mut clipboard_provider = DisplayServer::select().try_context().unwrap();
+                clipboard_provider.set_contents(chosen_emoji.glyph.to_owned()).unwrap();
+
+                println!("Added to clipboard!");
+            }
+        };
     }
 }
