@@ -21,8 +21,8 @@ struct Cli {
     raw: bool
 }
 
-fn search_query(query: String) -> Vec<&'static emoji::Emoji> {
-    emoji::search::search_annotation(&query, "en") // TODO: support more languages using the feature flag
+fn search_query(query: &str) -> Vec<&'static emoji::Emoji> {
+    emoji::search::search_annotation(query, "en") // TODO: support more languages using the feature flag
 }
 
 fn get_query(cli: &Cli) -> std::io::Result<String> {
@@ -60,7 +60,7 @@ fn main() {
     let cli = Cli::parse();
    
     if let Ok(query) = get_query(&cli) {
-        let results = search_query(query);
+        let results = search_query(&query);
         if results.is_empty() { return }
 
         if cli.raw {
@@ -70,15 +70,22 @@ fn main() {
             return
         }
 
-        if let Some(chosen_emoji) = explore_and_pick_one(results) {
-            println!("You chose {}!", chosen_emoji.glyph);
+        // Check if there was an exact match
+        // else pick one from the choices
+        let chosen_emoji = match results[0] {
+            result if result.name == query => Some(result),
+            _ => explore_and_pick_one(results)
+        };
+
+        if let Some(emoji) = chosen_emoji {
+            println!("You chose {}!", emoji.glyph);
 
             if cli.clipboard {
                 let mut clipboard_provider = DisplayServer::select().try_context().unwrap();
-                clipboard_provider.set_contents(chosen_emoji.glyph.to_owned()).unwrap();
+                clipboard_provider.set_contents(emoji.glyph.to_owned()).unwrap();
 
                 println!("Added to clipboard!");
             }
-        };
+        }
     }
 }
