@@ -26,5 +26,6 @@ ARGS:
 OPTIONS:
     -c, --clipboard    Add the chosen emoji to clipboard
     -h, --help         Print help information
+    -r, --raw          Return results in raw text format
     -V, --version      Print version information
 ```
