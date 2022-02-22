@@ -2,6 +2,8 @@
 
 An emoji fuzzy finder cli written in rust 🦀✨
 
+This is a simple frontend to the [emoji](https://docs.rs/emoji/0.2.1/emoji/index.html) crate's fuzzy-find features.
+
 ## Demo
 
 ![](assets/demo.svg)
