@@ -2,6 +2,12 @@
 name = "moji"
 version = "0.1.0"
 edition = "2021"
+authors = ["SyedAhkam smahkam57@gmail.com"]
+description = "An emoji fuzzy finder cli written in rust 🦀✨"
+readme = "README.md"
+repository = "https://github.com/SyedAhkam/moji"
+categories = ["accessibility", "command-line-utilities"]
+keywords = ["emoji", "fuzzy-find", "CLI"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
