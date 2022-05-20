@@ -8,6 +8,12 @@ This is a simple frontend to the [emoji](https://docs.rs/emoji/0.2.1/emoji/index
 
 ![](assets/demo.svg)
 
+## Install
+
+```sh
+$ cargo install moji
+```
+
 ## Usage
 
 ```sh
