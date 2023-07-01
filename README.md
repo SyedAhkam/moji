@@ -33,3 +33,12 @@ OPTIONS:
     -r, --raw          Return results in raw text format
     -V, --version      Print version information
 ```
+## FAQ
+
+### How to always add to clipboard?
+
+You can add a shell alias:
+
+```sh
+alias moji="moji -c"
+```
